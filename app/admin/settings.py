@@ -1,28 +1,31 @@
 
-import os
+from os import getenv, path
 from pathlib import Path
 from datetime import timedelta
+import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+dotenv_file = BASE_DIR / '.env.sample'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "dfasfsadfsadfsafsafsddfsfs"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get("DEBUG", 0)))
+# DEBUG = bool(int(os.environ.get("DEBUG", 0)))
+DEBUG = True
 
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get("ALLOWED_HOSTS", "").split(","),
-    )
-)
+ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS.extend(
+#     filter(
+#         None,
+#         os.environ.get("ALLOWED_HOSTS", "").split(","),
+#     )
+# )
 
 
 # Application definition
@@ -47,13 +50,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # ------------------------------------
-    "corsheaders.middleware.CorsMiddleware",
+
     "django.middleware.common.CommonMiddleware",
 ]
 
@@ -82,12 +86,9 @@ WSGI_APPLICATION = "admin.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("DB_HOST"),
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASS"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -142,8 +143,11 @@ AUTH_USER_MODEL = "core.User"
 #-----------------------------------------------
 
 
+# CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:3001",
     "http://localhost:8000",
 ]
 
@@ -155,9 +159,19 @@ CORSE_ALLOW_METHODS = [
     "PUT",
 ]
 
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
 AUTH_COOKIE = 'access'
 AUTH_COOKIE_MAX_AGE = 60 *60* 24
-AUTH_COOKIE_SECURE = bool(int(os.environ.get("AUTH_COOKIE_SECURE", 1)))
+# AUTH_COOKIE_SECURE = bool(int(os.environ.get("AUTH_COOKIE_SECURE", 1)))
+AUTH_COOKIE_SECURE = False
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
 AUTH_COOKIE_SAMESITE = 'None'
@@ -172,6 +186,9 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 

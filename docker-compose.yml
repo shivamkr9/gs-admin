@@ -21,6 +21,7 @@ services:
       - DB_USER=devuser
       - DB_PASS=changeme
       - AUTH_COOKIE_SECURE=0
+      - ALLOWED_HOSTS=http://localhost:3000,http://localhost,
     depends_on:
       - db
 
