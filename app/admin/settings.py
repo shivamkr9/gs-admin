@@ -19,7 +19,7 @@ SECRET_KEY = "dfasfsadfsadfsafsafsddfsfs"
 # DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS','127.0.0.1,localhost').split(',')
 # ALLOWED_HOSTS.extend(
 #     filter(
 #         None,
@@ -56,9 +56,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # ------------------------------------
-
-    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "admin.urls"
@@ -145,11 +142,10 @@ AUTH_USER_MODEL = "core.User"
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:8000",
-]
+CORS_ALLOWED_ORIGINS = getenv(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000,http://127.0.0.1:3000'
+).split(',')
 
 CORSE_ALLOW_METHODS = [
     "DELETE",
@@ -158,6 +154,8 @@ CORSE_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = (
     "accept",
@@ -186,9 +184,7 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
